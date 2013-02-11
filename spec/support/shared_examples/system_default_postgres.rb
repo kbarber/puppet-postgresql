@@ -203,10 +203,11 @@ shared_examples :system_default_postgres do
         }
         user { "test1":
           shell => "/bin/bash",
+          managehome => true,
         }
       EOS
       sudo_and_log(vm, "puppet apply -e '#{manifest}'")
-      sudo_and_log(vm, 'su test1 -c \'psql -U test1 -c "\q" test1\'; [ $? == 2 ]')
+      sudo_and_log(vm, 'su - test1 -c \'psql -U test1 -c "\q" test1\'; [ $? == 2 ]')
     end
   end
 
