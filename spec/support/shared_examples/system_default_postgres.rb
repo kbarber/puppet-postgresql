@@ -93,6 +93,11 @@ shared_examples :system_default_postgres do
       sudo_and_log(vm, "puppet apply --detailed-exitcodes -e '#{test_class}' ; [ $? == 2 ]")
     end
 
+    it 'should not throw error when cwd is /root' do
+      test_class = 'class {"postgresql_tests::system_default::test_ruby_psql": command => "SELECT 1", unless => "SELECT 1 WHERE 1=2" }'
+      sudo_and_log(vm, "cd /root; puppet apply -e '#{test_class}'")
+    end
+
     it 'should not run SQL when the unless query returns rows' do
       test_class = 'class {"postgresql_tests::system_default::test_ruby_psql": command => "SELECT * FROM pg_datbase limit 1", unless => "SELECT 1 WHERE 1=1" }'
 
